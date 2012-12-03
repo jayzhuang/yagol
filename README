@@ -6,8 +6,7 @@ Keys
 SPACE: start/stop
 C:     (C)lear Board
 R:     (R)andomly Add Cells
-G:     (G)osper's Glider Gun  #not implemented
-S:     (S)ave                 #not implemented
-L:     (L)oad                 #not implemented
+S:     (S)ave
+L:     (L)oad
 N:     (N)ext Iteration
 Use mouse to set cells

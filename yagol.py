@@ -1,6 +1,7 @@
 import pygame, sys
 from board_helper import *
 from propagator import *
+from saver import *
 from pygame.locals import *
 
 len_b, gap_b = 8, 1
@@ -48,6 +49,10 @@ while True:
 					rand_board(board)
 				elif event.key == K_n:
 					board = propagate(board, width, height, tot_b)
+				elif event.key == K_s:
+					save_board(board, "SAVEDATA")
+				elif event.key == K_l:
+					load_board(board, "SAVEDATA")
 				elif event.key == K_SPACE:
 					state = 'go'
 					fps = 10
