@@ -1,8 +1,8 @@
-import pygame, sys
+import pygame, sys, random
 from pygame.locals import *
 
 # defs
-len_b, gap_b = 18, 1
+len_b, gap_b = 8, 1
 tot_b = len_b + gap_b*2
 width, height = 800, 600
 state = 'prep'
@@ -18,11 +18,15 @@ def make_board(b, x, y, len, gap):
 			b.append((i*tot_b, j*tot_b, 'w'))
 
 def clear_board(b):
-	cb = []
-	for i in b:
-		x, y, ignored = i
-		cb.append((x, y, 'w'))
-	return cb
+	for i in range(len(b)):
+		x, y, ignored = b[i]
+		b[i] = (x, y, 'w')
+
+def rand_board(b):
+	for i in range(len(b)):
+		if random.randint(1, 10) == 1:
+			x, y, ignored = b[i]
+			b[i] = (x, y, 'b')
 
 def get_index(b, x, y, t):
 	for i in b:
@@ -58,8 +62,6 @@ def propagate(b):
 	for block in b:
 		x, y, c = block
 		n = nneighbors(b, nrow, i)
-		if n > 0:
-			print i, block, n
 		# rules
 		if c == 'b':
 			if n < 2 or n > 3:
@@ -105,17 +107,18 @@ while True:
 			if(state == 'prep'):
 				flip_block(board, mousex, mousey)
 		elif event.type == KEYDOWN:
-			if event.key == K_c:
-				if state == 'prep':
-					board = clear_board(board)
-			if event.key == K_s:
-				if state == 'prep':
+			if state == 'prep':
+				if event.key == K_c:
+					clear_board(board)
+				elif event.key == K_r:
+					rand_board(board)
+				elif event.key == K_SPACE:
 					state = 'go'
-					fps = 5
-				else:
+					fps = 10
+			elif state == 'go':
+				if event.key == K_SPACE:
 					state = 'prep'
 					fps = 30
-				print state
 			if event.key == K_ESCAPE:
 				pygame.event.post(pygame.event.Event(QUIT))
 	pygame.display.update()
