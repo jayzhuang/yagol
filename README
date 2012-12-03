@@ -5,9 +5,9 @@ This project is based on pygame, make sure pygame is installed before running th
 Use mouse to set cells
 
 Keys
-SPACE:	start/stop
-C: 		(C)lear Board
-R: 		(R)andomly Add Cells
-G: 		(G)osper's Glider Gun		#not implemented
-S:			(S)ave							#not implemented
-L:			(L)oad							#not implemented
+SPACE: start/stop
+C:     (C)lear Board
+R:     (R)andomly Add Cells
+G:     (G)osper's Glider Gun  #not implemented
+S:     (S)ave                 #not implemented
+L:     (L)oad                 #not implemented
