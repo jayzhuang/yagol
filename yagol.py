@@ -1,4 +1,6 @@
-import pygame, sys, random
+import pygame, sys, random, os
+from board_helpers import *
+from propagator import *
 from pygame.locals import *
 
 # defs
@@ -8,73 +10,8 @@ width, height = 800, 600
 state = 'prep'
 fps = 30
 
-# helpers
-def flip(c):
-	return {'w':'b', 'b':'w'}[c]
-
-def make_board(b, x, y, len, gap):
-	for i in range(x):
-		for j in range(y):
-			b.append((i*tot_b, j*tot_b, 'w'))
-
-def clear_board(b):
-	for i in range(len(b)):
-		x, y, ignored = b[i]
-		b[i] = (x, y, 'w')
-
-def rand_board(b):
-	for i in range(len(b)):
-		if random.randint(1, 10) == 1:
-			x, y, ignored = b[i]
-			b[i] = (x, y, 'b')
-
-def get_index(b, x, y, t):
-	for i in b:
-		bx, by, ignored = i
-		if x in range(bx, bx+t+1) and y in range(by, by+t+1):
-			return b.index(i)
-
-def flip_block(b, x, y):
-	i = get_index(b, x, y, tot_b)
-	clr = flip(b[i][2])
-	bx, by, ignored = b[i]
-	b[i] = (bx, by, clr)
-
-def is_black(b, i):
-	if i >= 0 and i < len(b) and b[i][2] == 'b':
-		return 1
-	return 0
-
-def nneighbors(b, nrow, i):
-	ret = is_black(b, i+nrow) + is_black(b, i-nrow)
-	if i % nrow != 0:
-		ret += is_black(b, i-1) + is_black(b, i+nrow-1) \
-				 + is_black(b, i-nrow-1)
-	if (i+1) % nrow != 0:
-		ret += is_black(b, i+1) + is_black(b, i+nrow+1) \
-				 + is_black(b, i-nrow+1)
-	return ret
-
-def propagate(b):
-	next = []
-	nrow = height / tot_b
-	i = 0
-	for block in b:
-		x, y, c = block
-		n = nneighbors(b, nrow, i)
-		# rules
-		if c == 'b':
-			if n < 2 or n > 3:
-				c = 'w'
-		else:
-			if n == 3:
-				c = 'b'
-		next.append((x, y, c))
-		i += 1
-	return next
-
 board = []
-make_board(board, width/tot_b, height/tot_b, len_b, gap_b)
+make_board(board, width/tot_b, height/tot_b, tot_b)
 
 # pygame starts
 pygame.init()
@@ -93,7 +30,7 @@ fontObj = pygame.font.Font('freesansbold.ttf', 32)
 while True:
 	windowsSurfaceObj.fill(GREY)
 	if state == 'go':
-		board = propagate(board)
+		board = propagate(board, height, tot_b)
 	for i in board:
 		x, y, c = i
 		clr = {'w':WHITE, 'b':BLACK}[c]
@@ -105,7 +42,7 @@ while True:
 		elif event.type == MOUSEBUTTONUP:
 			mousex, mousey = event.pos
 			if(state == 'prep'):
-				flip_block(board, mousex, mousey)
+				flip_block(board, mousex, mousey, tot_b)
 		elif event.type == KEYDOWN:
 			if state == 'prep':
 				if event.key == K_c:
